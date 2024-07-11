@@ -24,25 +24,37 @@ const ChipScan1 = () => {
       <button
         style={{ marginTop: "50px" }}
         onClick={async () => {
-          // const web3Instance = new Web3(window.ethereum);
+          var web3Provider = new Web3.providers.HttpProvider(
+            "https://ethereum-sepolia-rpc.publicnode.com"
+          );
+          const web3Instance = new Web3(web3Provider);
+
+          const encodedMsg = web3Instance.utils.encodePacked(
+            {
+              value: "0x3aF1D724044df4841fED6F8C35438f0cE6f3C7b9",
+              type: "address",
+            },
+            {
+              value:
+                "b4103351052a73be8e0681caad9b3c2c94f379a3c4b2770e3c0d4430b9090fce",
+              type: "bytes32",
+            }
+          );
+
           let signRes = await execHaloCmdWeb({
             name: "sign",
-            message: web3Instance.eth.abi.encodeParameters(
-              ["address", "bytes32"],
-              "0x3aF1D724044df4841fED6F8C35438f0cE6f3C7b9",
-              "0xb4103351052a73be8e0681caad9b3c2c94f379a3c4b2770e3c0d4430b9090fce"
-            ),
+            message: encodedMsg,
             keyNo: 1,
             legacySignCommand: true,
           });
-          let publicKey = keys.publicKeys[1];
-          let res = haloConvertSignature(
-            signRes.input.digest,
-            signRes.signature.der,
-            publicKey,
-            SECP256k1_ORDER
-          );
-          setSig(res.ether);
+          // let publicKey = keys.publicKeys[1];
+          // let res = haloConvertSignature(
+          //   signRes.input.digest,
+          //   signRes.signature.der,
+          //   publicKey,
+          //   SECP256k1_ORDER
+          // );
+          // setSig(res.ether);
           // getSignatureFromScan({
           //   chipPublicKey: keys.primaryPublicKeyRaw,
           //   address: "0x3aF1D724044df4841fED6F8C35438f0cE6f3C7b9",
