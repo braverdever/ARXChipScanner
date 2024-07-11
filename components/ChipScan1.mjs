@@ -24,7 +24,7 @@ const ChipScan1 = () => {
       <button
         style={{ marginTop: "50px" }}
         onClick={async () => {
-          const web3Instance = new Web3(window.ethereum);
+          // const web3Instance = new Web3(window.ethereum);
           let signRes = await execHaloCmdWeb({
             name: "sign",
             message: web3Instance.eth.abi.encodeParameters(
