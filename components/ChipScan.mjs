@@ -113,7 +113,8 @@ const ChipScan = () => {
           if (chipKeys == undefined) {
             alert("Error while getting chip public key, please try again.");
           }
-          setKeys(chipKeys);
+          alert();
+          setKeys(chipKeys.publicKeys);
 
           const recentBlockHash = await getRecentBlockHash();
           const encodedMsg = web3Instance.utils.encodePacked(
@@ -133,6 +134,7 @@ const ChipScan = () => {
               },
             }
           );
+          alert(sig.signature);
           if (sig == undefined) {
             alert("Error while getting signature, please try again.");
           }
