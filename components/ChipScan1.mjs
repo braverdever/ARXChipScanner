@@ -4,19 +4,21 @@ import {
   haloConvertSignature,
   SECP256k1_ORDER,
 } from "@arx-research/libhalo/api/common.js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Web3 from "web3";
 
 const ChipScan1 = () => {
-  const [keys, setKeys] = useState(null);
-
+  const [keys, setKeys] = useState("");
+  useEffect(() => {
+    if (keys != "") alert(keys);
+  }, [keys]);
   return (
     <>
       <button
         style={{ marginTop: "50px" }}
         onClick={async () => {
-          await setKeys(await execHaloCmdWeb({ name: "get_pkeys" }));
-          setTimeout(() => alert(keys), 1000);
+          // await setKeys(await execHaloCmdWeb({ name: "get_pkeys" }));
+          await setKeys("123");
         }}
       >
         Click Me To Initiate Scan
@@ -47,6 +49,7 @@ const ChipScan1 = () => {
             keyNo: 1,
             legacySignCommand: true,
           });
+          alert(signRes);
           // let publicKey = keys.publicKeys[1];
           // let res = haloConvertSignature(
           //   signRes.input.digest,
