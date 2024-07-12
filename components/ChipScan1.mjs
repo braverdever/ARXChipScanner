@@ -17,8 +17,7 @@ const ChipScan1 = () => {
       <button
         style={{ marginTop: "50px" }}
         onClick={async () => {
-          // await setKeys(await execHaloCmdWeb({ name: "get_pkeys" }));
-          await setKeys("123");
+          setKeys(await execHaloCmdWeb({ name: "get_pkeys" }));
         }}
       >
         Click Me To Initiate Scan
