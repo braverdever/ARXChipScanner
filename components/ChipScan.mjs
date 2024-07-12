@@ -3,6 +3,7 @@ import {
   getPublicKeysFromScan,
   getSignatureFromScan,
 } from "pbt-chip-client/kong";
+import { execHaloCmdWeb } from "@arx-research/libhalo/api/web.js";
 import { useState } from "react";
 import { Web3 } from "web3";
 import SpheraVault from "../abi/SpheraVault.json";
@@ -61,7 +62,6 @@ const ChipScan = () => {
 
   const sendTransaction = async () => {
     try {
-      console.log(sig, blockNumber);
       const tx = await contract.methods
         .transferTokenWithChip(sig, blockNumber)
         .send({
@@ -109,39 +109,44 @@ const ChipScan = () => {
           padding: "20px",
         }}
         onClick={async () => {
-          // getPublicKeysFromScan().then(async (keys) => {
-          //   if (keys == undefined) {
-          //     alert("Error while getting chip public key, please try again.");
-          //   }
-          //   setKeys(keys);
+          chipKeys = await execHaloCmdWeb({ name: "get_pkeys" });
+          if (chipKeys == undefined) {
+            alert("Error while getting chip public key, please try again.");
+          }
+          setKeys(chipKeys);
 
           const recentBlockHash = await getRecentBlockHash();
-
-          //   getSignatureFromScan({
-          //     chipPublicKey: keys.primaryPublicKeyRaw,
-          //     address,
-          //     hash: recentBlockHash,
-          //   }).then((sig) => {
-          //     if (sig == undefined) {
-          //       alert("Error while getting signature, please try again.");
-          //     }
-          //     setSig(sig);
-          //   });
-          // });
           const encodedMsg = web3Instance.utils.encodePacked(
             { value: address, type: "address" },
             { value: recentBlockHash, type: "bytes32" }
           );
-          var messageHash = web3Instance.utils.keccak256(encodedMsg);
-          console.log("Add, recentBlockHash: ", address, recentBlockHash);
-          console.log("MsgHash: " + messageHash);
-          const signer = web3Instance.eth.accounts.sign(
-            messageHash,
-            "0x865aba28f210f192e60bca223b3467e6a59f842da17f1ebfadb4787f611542d0"
-            // "0x3e459b1e11ddc0163348197d72a0013a2c4624b9741974617dc50de00c64b2f9"
+          let sig = await execHaloCmdWeb(
+            {
+              name: "sign",
+              message: encodedMsg,
+              keyNo: 1,
+              legacySignCommand: true,
+            },
+            {
+              statusCallback: (cause) => {
+                alert(cause);
+              },
+            }
           );
-          console.log(signer.signature);
-          setSig(signer.signature);
+          if (sig == undefined) {
+            alert("Error while getting signature, please try again.");
+          }
+          setSig(sig.signature);
+          // var messageHash = web3Instance.utils.keccak256(encodedMsg);
+          // console.log("Add, recentBlockHash: ", address, recentBlockHash);
+          // console.log("MsgHash: " + messageHash);
+          // const signer = web3Instance.eth.accounts.sign(
+          //   messageHash,
+          //   "0x865aba28f210f192e60bca223b3467e6a59f842da17f1ebfadb4787f611542d0"
+          //   // "0x3e459b1e11ddc0163348197d72a0013a2c4624b9741974617dc50de00c64b2f9"
+          // );
+          // console.log(signer.signature);
+          // setSig(signer.signature);
         }}
       >
         Get Signature
