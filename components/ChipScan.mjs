@@ -63,7 +63,7 @@ const ChipScan = () => {
   const sendTransaction = async () => {
     try {
       const tx = await contract.methods
-        .transferTokenWithChip(sig, blockNumber)
+        .mintPBT(sig, blockNumber)
         .send({
           from: address,
         })
