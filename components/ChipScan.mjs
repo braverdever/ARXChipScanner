@@ -109,7 +109,14 @@ const ChipScan = () => {
           padding: "20px",
         }}
         onClick={async () => {
-          chipKeys = await execHaloCmdWeb({ name: "get_pkeys" });
+          chipKeys = await execHaloCmdWeb(
+            { name: "get_pkeys" },
+            {
+              statusCallback: (cause) => {
+                alert(cause);
+              },
+            }
+          );
           if (chipKeys == undefined) {
             alert("Error while getting chip public key, please try again.");
           }
