@@ -113,7 +113,7 @@ const ChipScan = () => {
           if (chipKeys == undefined) {
             alert("Error while getting chip public key, please try again.");
           }
-          alert();
+          alert(chipKeys.publicKeys);
           setKeys(chipKeys.publicKeys);
 
           const recentBlockHash = await getRecentBlockHash();
