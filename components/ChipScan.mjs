@@ -30,7 +30,7 @@ const ChipScan = () => {
   }
 
   const connectWallet = async () => {
-    if (window.ethereum) {
+    if (true || window.ethereum) {
       var web3Provider = new Web3.providers.HttpProvider(
         "https://ethereum-sepolia-rpc.publicnode.com"
       );
