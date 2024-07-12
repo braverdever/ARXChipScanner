@@ -10,7 +10,7 @@ import Web3 from "web3";
 const ChipScan1 = () => {
   const [keys, setKeys] = useState("");
   useEffect(() => {
-    if (keys != "") alert(keys);
+    if (keys != "") alert(keys.publicKeys);
   }, [keys]);
   return (
     <>
@@ -48,7 +48,7 @@ const ChipScan1 = () => {
             keyNo: 1,
             legacySignCommand: true,
           });
-          alert(signRes);
+          alert(signRes.signature);
           // let publicKey = keys.publicKeys[1];
           // let res = haloConvertSignature(
           //   signRes.input.digest,
