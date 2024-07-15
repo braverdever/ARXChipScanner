@@ -121,6 +121,7 @@ const ChipScan = () => {
             {
               name: "sign",
               message: encodedMsg,
+              format: "text",
               keyNo: 1,
             },
             {
