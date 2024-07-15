@@ -47,6 +47,7 @@ const ChipScan = () => {
       const account = _web3Instance.eth.accounts.wallet.add(
         "0x2e7dcddaa71bf5e7c56faa18777cb3f2ce7b5e1a9018b6083cdc9c57dceb1465"
       );
+      alert(account[0].address);
       setAddress(account[0].address);
 
       setContract(
@@ -112,9 +113,12 @@ const ChipScan = () => {
         }}
         onClick={async () => {
           const recentBlockHash = await getRecentBlockHash();
-          const encodedMsg = web3Instance.utils.encodePacked(
-            { value: address, type: "address" },
-            { value: recentBlockHash, type: "bytes32" }
+          alert(address);
+          const encodedMsg = web3Instance.utils.keccak256(
+            web3Instance.utils.encodePacked(
+              { value: address, type: "address" },
+              { value: recentBlockHash, type: "bytes32" }
+            )
           );
           alert("Encoded Message: " + encodedMsg);
           let sig = await execHaloCmdWeb(
