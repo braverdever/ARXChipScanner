@@ -9,17 +9,12 @@ import { Web3 } from "web3";
 import SpheraVault from "../abi/SpheraVault.json";
 
 const ChipScan = () => {
-  const [keys, setKeys] = useState("");
   const [blockNumber, setBlockNumber] = useState();
   const [sig, setSig] = useState("");
   const [address, setAddress] = useState("");
   const [tx, setTx] = useState("");
   const [web3Instance, setWeb3Instance] = useState();
   const [contract, setContract] = useState();
-
-  useEffect(() => {
-    // if (keys != "" || keys != undefined) alert(keys);
-  }, [keys]);
 
   async function getLatestBlockNumber() {
     const latestBlockNumber = await web3Instance.eth.getBlockNumber();
@@ -113,21 +108,6 @@ const ChipScan = () => {
           padding: "20px",
         }}
         onClick={async () => {
-          const chipKeys = await execHaloCmdWeb(
-            { name: "get_pkeys" },
-            {
-              statusCallback: (cause) => {
-                alert(cause);
-              },
-            }
-          );
-          if (chipKeys == undefined) {
-            alert("Error while getting chip public key, please try again.");
-          }
-          alert(chipKeys.etherAddresses[1]);
-          alert(chipKeys.publicKeys[1]);
-          setKeys(chipKeys.publicKeys[1]);
-
           const recentBlockHash = await getRecentBlockHash();
           const encodedMsg = web3Instance.utils.encodePacked(
             { value: address, type: "address" },
@@ -138,7 +118,6 @@ const ChipScan = () => {
               name: "sign",
               message: encodedMsg,
               keyNo: 1,
-              legacySignCommand: true,
             },
             {
               statusCallback: (cause) => {
@@ -146,7 +125,7 @@ const ChipScan = () => {
               },
             }
           );
-          alert(sig.signature);
+          alert(`Signed: ${JSON.stringify(sig, null, 2)}`);
           if (sig == undefined) {
             alert("Error while getting signature, please try again.");
           }
