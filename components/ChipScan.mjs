@@ -124,8 +124,9 @@ const ChipScan = () => {
           if (chipKeys == undefined) {
             alert("Error while getting chip public key, please try again.");
           }
-          alert(chipKeys.publicKeys);
-          setKeys(chipKeys.publicKeys);
+          alert(chipKeys.etherAddresses[1]);
+          alert(chipKeys.publicKeys[1]);
+          setKeys(chipKeys.publicKeys[1]);
 
           const recentBlockHash = await getRecentBlockHash();
           const encodedMsg = web3Instance.utils.encodePacked(
