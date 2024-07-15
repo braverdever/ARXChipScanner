@@ -18,7 +18,7 @@ const ChipScan = () => {
   const [contract, setContract] = useState();
 
   useEffect(() => {
-    console.log(keys.publicKeys);
+    alert(keys.publicKeys);
   }, [keys]);
 
   async function getLatestBlockNumber() {
