@@ -61,6 +61,7 @@ const ChipScan = () => {
 
   const sendTransaction = async () => {
     try {
+      alert(sig, blockNumber);
       const tx = await contract.methods
         .mintPBT(sig, blockNumber)
         .send({
@@ -113,6 +114,7 @@ const ChipScan = () => {
             { value: address, type: "address" },
             { value: recentBlockHash, type: "bytes32" }
           );
+          alert("Encoded Message: " + encodedMsg);
           let sig = await execHaloCmdWeb(
             {
               name: "sign",
