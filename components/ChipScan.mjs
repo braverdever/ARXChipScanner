@@ -62,8 +62,8 @@ const ChipScan = () => {
 
   const sendTransaction = async () => {
     try {
-      alert('Signature: ', sig);
-      alert('Block number': blockNumber);
+      alert("Signature: ", sig);
+      alert("Block number", blockNumber);
       const tx = await contract.methods
         .mintPBT(sig, blockNumber)
         .send({
