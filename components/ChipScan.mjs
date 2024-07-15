@@ -24,6 +24,7 @@ const ChipScan = () => {
 
   async function getRecentBlockHash() {
     const latestBlockNumber = await getLatestBlockNumber();
+    setBlockNumber(latestBlockNumber);
     const block = await web3Instance.eth.getBlock(latestBlockNumber);
     return block.hash;
   }
@@ -61,7 +62,8 @@ const ChipScan = () => {
 
   const sendTransaction = async () => {
     try {
-      alert(sig, blockNumber);
+      alert('Signature: ', sig);
+      alert('Block number': blockNumber);
       const tx = await contract.methods
         .mintPBT(sig, blockNumber)
         .send({
