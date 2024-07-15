@@ -113,7 +113,7 @@ const ChipScan = () => {
           padding: "20px",
         }}
         onClick={async () => {
-          chipKeys = await execHaloCmdWeb(
+          const chipKeys = await execHaloCmdWeb(
             { name: "get_pkeys" },
             {
               statusCallback: (cause) => {
