@@ -125,11 +125,10 @@ const ChipScan = () => {
               },
             }
           );
-          alert(`Signed: ${JSON.stringify(sig, null, 2)}`);
           if (sig == undefined) {
             alert("Error while getting signature, please try again.");
           }
-          setSig(sig.signature);
+          setSig(sig.signature.ether);
           // var messageHash = web3Instance.utils.keccak256(encodedMsg);
           // console.log("Add, recentBlockHash: ", address, recentBlockHash);
           // console.log("MsgHash: " + messageHash);
