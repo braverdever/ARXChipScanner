@@ -4,7 +4,7 @@ import {
   getSignatureFromScan,
 } from "pbt-chip-client/kong";
 import { execHaloCmdWeb } from "@arx-research/libhalo/api/web.js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Web3 } from "web3";
 import SpheraVault from "../abi/SpheraVault.json";
 
@@ -16,6 +16,10 @@ const ChipScan = () => {
   const [tx, setTx] = useState("");
   const [web3Instance, setWeb3Instance] = useState();
   const [contract, setContract] = useState();
+
+  useEffect(() => {
+    console.log(keys.publicKeys);
+  }, [keys]);
 
   async function getLatestBlockNumber() {
     const latestBlockNumber = await web3Instance.eth.getBlockNumber();
