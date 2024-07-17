@@ -111,43 +111,65 @@ const ChipScan = () => {
         }}
         onClick={async () => {
           const recentBlockHash = await getRecentBlockHash();
-          alert("Recent Block Hash" + recentBlockHash);
           const encodedMsg = web3Instance.utils.encodePacked(
             { value: address, type: "address" },
             { value: recentBlockHash, type: "bytes" }
           );
           const messageHash = web3Instance.utils.keccak256(encodedMsg);
-          alert("Message Hash" + messageHash);
-          let sig = await execHaloCmdWeb(
-            {
-              name: "sign",
-              message: messageHash,
-              format: "text",
-              keyNo: 1,
-            },
-            {
-              statusCallback: (cause) => {
-                alert(cause);
-              },
-            }
+
+          alert("Recent Block Hash: " + recentBlockHash);
+          console.log("Recent Block Hash: " + recentBlockHash);
+
+          alert("Message Hash: " + messageHash);
+          console.log("Message Hash: " + messageHash);
+
+          const signer = web3Instance.eth.accounts.sign(
+            messageHash,
+            "0x865aba28f210f192e60bca223b3467e6a59f842da17f1ebfadb4787f611542d0"
+            // "0x3e459b1e11ddc0163348197d72a0013a2c4624b9741974617dc50de00c64b2f9"
           );
-          if (sig == undefined) {
-            alert("Error while getting signature, please try again.");
-          }
-          alert(JSON.stringify(sig));
-          setSig(sig.signature.ether);
-          // const messageHash = web3Instance.utils.keccak256(encodedMsg);
-          // console.log("Add, recentBlockHash: ", address, recentBlockHash);
-          // console.log("MsgHash: " + messageHash);
-          // const signer = web3Instance.eth.accounts.sign(
-          //   messageHash,
-          //   "0x865aba28f210f192e60bca223b3467e6a59f842da17f1ebfadb4787f611542d0"
-          //   // "0x3e459b1e11ddc0163348197d72a0013a2c4624b9741974617dc50de00c64b2f9"
-          // );
-          // console.log(signer.signature);
+          console.log("Wallet signature: " + signer.signature);
+
+          try {
+            let sig;
+            sig = await execHaloCmdWeb(
+              {
+                name: "sign",
+                message: messageHash,
+                format: "text",
+                keyNo: 1,
+              },
+              {
+                statusCallback: (cause) => {
+                  alert(cause);
+                },
+              }
+            );
+            if (sig == undefined) {
+              alert("Error while getting signature, please try again.");
+            }
+            alert(JSON.stringify(sig));
+            setSig(sig.signature.ether);
+          } catch {}
         }}
       >
         Get Signature
+      </button>
+      <button
+        onClick={() => {
+          alert(
+            web3Instance.eth.accounts.recover(
+              "0xda2eecc7cef6aec5ad81bc4195492ae04821503fda1a8d67e6ed35ab9b1c8c87",
+              "0x6edf76b865d78fb68be54869d5c4617b536c55314ec433952236263aeb65e0d20ac2d721f1d65f77a0ac8860c0999d5a62452d99cb3d5df044a6e93f812533a91b"
+            )
+          );
+        }}
+        style={{
+          backgroundColor: "green",
+          padding: "20px",
+        }}
+      >
+        Verify
       </button>
       <button
         style={{
