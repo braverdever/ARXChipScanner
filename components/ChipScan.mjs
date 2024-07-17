@@ -62,7 +62,6 @@ const ChipScan = () => {
 
   const sendTransaction = async () => {
     try {
-      alert("Signature: " + sig);
       alert("Block number" + blockNumber);
       const tx = await contract.methods
         .mintPBT(sig, blockNumber)
@@ -112,13 +111,13 @@ const ChipScan = () => {
         }}
         onClick={async () => {
           const recentBlockHash = await getRecentBlockHash();
-          alert(recentBlockHash);
+          alert("Recent Block Hash" + recentBlockHash);
           const encodedMsg = web3Instance.utils.encodePacked(
             { value: address, type: "address" },
             { value: recentBlockHash, type: "bytes" }
           );
           const messageHash = web3Instance.utils.keccak256(encodedMsg);
-          alert(messageHash);
+          alert("Message Hash" + messageHash);
           let sig = await execHaloCmdWeb(
             {
               name: "sign",
@@ -135,6 +134,7 @@ const ChipScan = () => {
           if (sig == undefined) {
             alert("Error while getting signature, please try again.");
           }
+          alert(JSON.stringify(sig));
           setSig(sig.signature.ether);
           // const messageHash = web3Instance.utils.keccak256(encodedMsg);
           // console.log("Add, recentBlockHash: ", address, recentBlockHash);
@@ -145,7 +145,6 @@ const ChipScan = () => {
           //   // "0x3e459b1e11ddc0163348197d72a0013a2c4624b9741974617dc50de00c64b2f9"
           // );
           // console.log(signer.signature);
-          setSig(signer.signature);
         }}
       >
         Get Signature
