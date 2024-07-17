@@ -122,7 +122,7 @@ const ChipScan = () => {
           let sig = await execHaloCmdWeb(
             {
               name: "sign",
-              message: encodedMsg,
+              message: messageHash,
               format: "text",
               keyNo: 1,
             },
@@ -136,7 +136,7 @@ const ChipScan = () => {
             alert("Error while getting signature, please try again.");
           }
           setSig(sig.signature.ether);
-          // var messageHash = web3Instance.utils.keccak256(encodedMsg);
+          // const messageHash = web3Instance.utils.keccak256(encodedMsg);
           // console.log("Add, recentBlockHash: ", address, recentBlockHash);
           // console.log("MsgHash: " + messageHash);
           // const signer = web3Instance.eth.accounts.sign(
@@ -145,7 +145,7 @@ const ChipScan = () => {
           //   // "0x3e459b1e11ddc0163348197d72a0013a2c4624b9741974617dc50de00c64b2f9"
           // );
           // console.log(signer.signature);
-          // setSig(signer.signature);
+          setSig(signer.signature);
         }}
       >
         Get Signature
