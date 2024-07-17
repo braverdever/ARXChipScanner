@@ -1,8 +1,4 @@
 "use client";
-import {
-  getPublicKeysFromScan,
-  getSignatureFromScan,
-} from "pbt-chip-client/kong";
 import { execHaloCmdWeb } from "@arx-research/libhalo/api/web.js";
 import { useEffect, useState } from "react";
 import { Web3 } from "web3";
@@ -79,6 +75,7 @@ const ChipScan = () => {
           // display: keys == "" ? "none" : "block",
           backgroundColor: sig == "" ? "red" : "green",
           padding: "20px",
+          width: "200px",
         }}
         onClick={async () => {
           const { web3Instance, address } = connectWallet();
