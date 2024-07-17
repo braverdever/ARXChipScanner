@@ -116,7 +116,7 @@ const ChipScan = () => {
             setSig(sig.signature.ether);
             sig = await execHaloCmdWeb({
               name: "sign",
-              message: "hello",
+              message: web3Instance.utils.keccak256("hello"),
               format: "text",
               keyNo: 1,
             });
