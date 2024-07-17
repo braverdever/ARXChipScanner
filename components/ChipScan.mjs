@@ -13,30 +13,22 @@ const ChipScan = () => {
   const [sig, setSig] = useState("");
   const [address, setAddress] = useState("");
   const [tx, setTx] = useState("");
-  const [web3Instance, setWeb3Instance] = useState();
   const [contract, setContract] = useState();
 
-  async function getLatestBlockNumber() {
+  async function getRecentBlockHash(web3Instance) {
     const latestBlockNumber = await web3Instance.eth.getBlockNumber();
     setBlockNumber(latestBlockNumber);
-    return latestBlockNumber;
-  }
-
-  async function getRecentBlockHash() {
-    const latestBlockNumber = await getLatestBlockNumber();
-    setBlockNumber(latestBlockNumber);
     const block = await web3Instance.eth.getBlock(latestBlockNumber);
-    return latestBlockNumber, block.hash;
+    return { latestBlockNumber, recentBlockHash: block.hash };
   }
 
-  const connectWallet = async () => {
+  const connectWallet = () => {
     if (true || window.ethereum) {
       var web3Provider = new Web3.providers.HttpProvider(
         "https://ethereum-sepolia-rpc.publicnode.com"
       );
-      const _web3Instance = new Web3(web3Provider);
-      setWeb3Instance(_web3Instance);
-      // await _web3Instance.currentProvider.request({
+      const web3Instance = new Web3(web3Provider);
+      // await web3Instance.currentProvider.request({
       //   method: "wallet_switchEthereumChain",
       //   params: [{ chainId: "0xaa36a7" }],
       // });
@@ -44,18 +36,18 @@ const ChipScan = () => {
       //   method: "eth_requestAccounts",
       // });
       // setAddress(accounts[0]);
-      const account = _web3Instance.eth.accounts.wallet.add(
+      const account = web3Instance.eth.accounts.wallet.add(
         "0x2e7dcddaa71bf5e7c56faa18777cb3f2ce7b5e1a9018b6083cdc9c57dceb1465"
       );
       setAddress(account[0].address);
 
       setContract(
-        new _web3Instance.eth.Contract(
+        new web3Instance.eth.Contract(
           SpheraVault.abi,
           "0x60c780Cd8F62d8aC25c9C4F6032Cfbd8aD9f7990"
         )
       );
-      return web3Instance, account[0].address;
+      return { web3Instance, address: account[0].address };
     } else {
       alert("Please install metamask.");
     }
@@ -89,9 +81,10 @@ const ChipScan = () => {
           padding: "20px",
         }}
         onClick={async () => {
-          const address = await connectWallet();
+          const { web3Instance, address } = connectWallet();
+          console.log(web3Instance);
           const { latestBlockNumber, recentBlockHash } =
-            await getRecentBlockHash();
+            await getRecentBlockHash(web3Instance);
           const encodedMsg = web3Instance.utils.encodePacked(
             { value: address, type: "address" },
             { value: recentBlockHash, type: "bytes" }
