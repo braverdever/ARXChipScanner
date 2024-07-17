@@ -106,20 +106,20 @@ const ChipScan = () => {
 
           try {
             let sig;
-            sig = await execHaloCmdWeb(
-              {
-                name: "sign",
-                message: messageHash,
-                format: "text",
-                keyNo: 1,
-              },
-              {
-                statusCallback: (cause) => {},
-              }
-            );
-            if (sig == undefined) {
-              alert("Error while getting signature, please try again.");
-            }
+            sig = await execHaloCmdWeb({
+              name: "sign",
+              message: messageHash,
+              format: "text",
+              keyNo: 1,
+            });
+            alert(JSON.stringify(sig));
+            setSig(sig.signature.ether);
+            sig = await execHaloCmdWeb({
+              name: "sign",
+              message: "hello",
+              format: "text",
+              keyNo: 1,
+            });
             alert(JSON.stringify(sig));
             setSig(sig.signature.ether);
           } catch {}
