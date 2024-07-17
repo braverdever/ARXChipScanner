@@ -26,7 +26,7 @@ const ChipScan = () => {
     const latestBlockNumber = await getLatestBlockNumber();
     setBlockNumber(latestBlockNumber);
     const block = await web3Instance.eth.getBlock(latestBlockNumber);
-    return block.hash;
+    return latestBlockNumber, block.hash;
   }
 
   const connectWallet = async () => {
@@ -55,6 +55,7 @@ const ChipScan = () => {
           "0x60c780Cd8F62d8aC25c9C4F6032Cfbd8aD9f7990"
         )
       );
+      return web3Instance, account[0].address;
     } else {
       alert("Please install metamask.");
     }
@@ -62,7 +63,6 @@ const ChipScan = () => {
 
   const sendTransaction = async () => {
     try {
-      alert("Block number" + blockNumber);
       const tx = await contract.methods
         .mintPBT(sig, blockNumber)
         .send({
@@ -84,51 +84,35 @@ const ChipScan = () => {
     <div style={{ display: "inline-grid", gap: "20px" }}>
       <button
         style={{
-          backgroundColor: address == "" ? "red" : "green",
-          padding: "20px",
-        }}
-        onClick={connectWallet}
-      >
-        Connect wallet
-      </button>
-      <button></button>
-
-      {/* <button
-        style={{
-          display: address == "" ? "none" : "block",
-          backgroundColor: keys == "" ? "red" : "green",
-          padding: "20px",
-        }}
-        onClick={() => {}}
-      >
-        Initiate Scan
-      </button> */}
-      <button
-        style={{
           // display: keys == "" ? "none" : "block",
           backgroundColor: sig == "" ? "red" : "green",
           padding: "20px",
         }}
         onClick={async () => {
-          const recentBlockHash = await getRecentBlockHash();
+          const address = await connectWallet();
+          const { latestBlockNumber, recentBlockHash } =
+            await getRecentBlockHash();
           const encodedMsg = web3Instance.utils.encodePacked(
             { value: address, type: "address" },
             { value: recentBlockHash, type: "bytes" }
           );
           const messageHash = web3Instance.utils.keccak256(encodedMsg);
 
-          alert("Recent Block Hash: " + recentBlockHash);
-          console.log("Recent Block Hash: " + recentBlockHash);
-
-          alert("Message Hash: " + messageHash);
-          console.log("Message Hash: " + messageHash);
-
           const signer = web3Instance.eth.accounts.sign(
             messageHash,
             "0x865aba28f210f192e60bca223b3467e6a59f842da17f1ebfadb4787f611542d0"
             // "0x3e459b1e11ddc0163348197d72a0013a2c4624b9741974617dc50de00c64b2f9"
           );
-          console.log("Wallet signature: " + signer.signature);
+
+          const msg = `
+              Recent Block Number: ${latestBlockNumber}
+              Recent Block Hash: ${recentBlockHash}
+              Message Hash: ${messageHash}
+              Wallet signature: ${signer.signature}
+          `;
+
+          console.log(msg);
+          alert(msg);
 
           try {
             let sig;
@@ -140,9 +124,7 @@ const ChipScan = () => {
                 keyNo: 1,
               },
               {
-                statusCallback: (cause) => {
-                  alert(cause);
-                },
+                statusCallback: (cause) => {},
               }
             );
             if (sig == undefined) {
@@ -154,22 +136,6 @@ const ChipScan = () => {
         }}
       >
         Get Signature
-      </button>
-      <button
-        onClick={() => {
-          alert(
-            web3Instance.eth.accounts.recover(
-              "0xda2eecc7cef6aec5ad81bc4195492ae04821503fda1a8d67e6ed35ab9b1c8c87",
-              "0x6edf76b865d78fb68be54869d5c4617b536c55314ec433952236263aeb65e0d20ac2d721f1d65f77a0ac8860c0999d5a62452d99cb3d5df044a6e93f812533a91b"
-            )
-          );
-        }}
-        style={{
-          backgroundColor: "green",
-          padding: "20px",
-        }}
-      >
-        Verify
       </button>
       <button
         style={{
