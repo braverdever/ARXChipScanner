@@ -108,19 +108,11 @@ const ChipScan = () => {
             let sig;
             sig = await execHaloCmdWeb({
               name: "sign",
-              message: messageHash,
-              format: "text",
+              digest: messageHash,
               keyNo: 1,
             });
             alert(JSON.stringify(sig));
             setSig(sig.signature.ether);
-            sig = await execHaloCmdWeb({
-              name: "sign",
-              message: web3Instance.utils.keccak256("hello"),
-              format: "text",
-              keyNo: 1,
-            });
-            alert(JSON.stringify(sig));
           } catch {}
         }}
       >
