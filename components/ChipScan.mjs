@@ -121,7 +121,6 @@ const ChipScan = () => {
               keyNo: 1,
             });
             alert(JSON.stringify(sig));
-            setSig(sig.signature.ether);
           } catch {}
         }}
       >
