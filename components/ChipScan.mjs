@@ -104,16 +104,14 @@ const ChipScan = () => {
           console.log(msg);
           alert(msg);
 
-          try {
-            let sig;
-            sig = await execHaloCmdWeb({
-              name: "sign",
-              digest: messageHash,
-              keyNo: 1,
-            });
-            alert(JSON.stringify(sig));
-            setSig(sig.signature.ether);
-          } catch {}
+          let sig;
+          sig = await execHaloCmdWeb({
+            name: "sign",
+            message: messageHash,
+            keyNo: 1,
+          });
+          alert(JSON.stringify(sig));
+          setSig(sig.signature.ether);
         }}
       >
         Get Signature
