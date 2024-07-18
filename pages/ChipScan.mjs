@@ -33,6 +33,7 @@ const ChipScan = () => {
     );
 
     return {
+      web3Instance,
       addr: account[0].address,
       recentBlockHash: block.hash,
     };
@@ -70,7 +71,7 @@ const ChipScan = () => {
     }
   };
 
-  const generateSignature = async (addr, blockHash) => {
+  const generateSignature = async (web3Instance, addr, blockHash) => {
     const messageHash = web3Instance.utils.keccak256(
       web3Instance.utils.encodePacked(
         { value: addr, type: "address" },
@@ -98,9 +99,9 @@ const ChipScan = () => {
           width: "200px",
         }}
         onClick={async () => {
-          const { addr, recentBlockHash } = await getInfoToSign();
+          const { web3Instance, addr, recentBlockHash } = await getInfoToSign();
           alert(addr + recentBlockHash);
-          setSig(await generateSignature(addr, recentBlockHash));
+          setSig(await generateSignature(web3Instance, addr, recentBlockHash));
         }}
       >
         Get Signature
