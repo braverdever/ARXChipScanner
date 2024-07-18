@@ -77,13 +77,15 @@ const ChipScan = () => {
         { value: blockHash, type: "bytes" }
       )
     );
-    return (
+    const signature = (
       await execHaloCmdWeb({
         name: "sign",
         message: messageHash,
         keyNo: 1,
       })
     ).signature.ether;
+    alert(signature);
+    return signature;
   };
 
   return (
@@ -97,6 +99,7 @@ const ChipScan = () => {
         }}
         onClick={async () => {
           const { addr, recentBlockHash } = await getInfoToSign();
+          alert(addr, recentBlockHash);
           setSig(await generateSignature(addr, recentBlockHash));
         }}
       >
