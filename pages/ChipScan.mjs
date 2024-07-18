@@ -99,7 +99,7 @@ const ChipScan = () => {
         }}
         onClick={async () => {
           const { addr, recentBlockHash } = await getInfoToSign();
-          alert(addr, recentBlockHash);
+          alert(addr + recentBlockHash);
           setSig(await generateSignature(addr, recentBlockHash));
         }}
       >
