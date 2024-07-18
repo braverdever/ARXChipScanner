@@ -1,5 +1,5 @@
 import Image from "next/image";
-import ChipScan from "../components/ChipScan.mjs";
+import ChipScan from "../pages/ChipScan.mjs";
 export default function Home() {
   return (
     <main>
