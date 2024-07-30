@@ -13,16 +13,17 @@ const ChipScan = () => {
 
   const getInfoToSign = async () => {
     var web3Provider = new Web3.providers.HttpProvider(
-      "https://ethereum-sepolia-rpc.publicnode.com"
+      "https://testnet.hashio.io/api"
     );
     const web3Instance = new Web3(web3Provider);
     const account = web3Instance.eth.accounts.wallet.add(
-      "0x2e7dcddaa71bf5e7c56faa18777cb3f2ce7b5e1a9018b6083cdc9c57dceb1465"
+      "0x865aba28f210f192e60bca223b3467e6a59f842da17f1ebfadb4787f611542d0"
     );
 
     const latestBlockNumber = await web3Instance.eth.getBlockNumber();
     const block = await web3Instance.eth.getBlock(latestBlockNumber);
 
+    console.log(`Block No: ${latestBlockNumber}`);
     setBlockNumber(latestBlockNumber);
     setAddress(account[0].address);
     setContract(
@@ -39,7 +40,18 @@ const ChipScan = () => {
     };
   };
 
+  const generateMessageHash = (web3Instance, addr, blockHash) => {
+    const messageHash = web3Instance.utils.keccak256(
+      web3Instance.utils.encodePacked(
+        { value: addr, type: "address" },
+        { value: blockHash, type: "bytes" }
+      )
+    );
+    return messageHash;
+  };
+
   const mintPBT = async () => {
+    console.log(sig, blockNumber);
     try {
       const tx = await contract.methods
         .mintPBT(sig, blockNumber)
@@ -71,17 +83,20 @@ const ChipScan = () => {
     }
   };
 
-  const generateSignature = async (web3Instance, addr, blockHash) => {
-    const messageHash = web3Instance.utils.keccak256(
-      web3Instance.utils.encodePacked(
-        { value: addr, type: "address" },
-        { value: blockHash, type: "bytes" }
-      )
+  const imitateSignature = (web3Instance, messageHash) => {
+    const signer = web3Instance.eth.accounts.sign(
+      messageHash,
+      "0x865aba28f210f192e60bca223b3467e6a59f842da17f1ebfadb4787f611542d0"
     );
+    console.log(`Signature: ${signer.signature}`);
+    return signer.signature;
+  };
+
+  const generateSignature = async (messageHash) => {
     const signature = (
       await execHaloCmdWeb({
         name: "sign",
-        message: messageHash,
+        digest: messageHash,
         keyNo: 1,
       })
     ).signature.ether;
@@ -100,8 +115,16 @@ const ChipScan = () => {
         }}
         onClick={async () => {
           const { web3Instance, addr, recentBlockHash } = await getInfoToSign();
-          alert(addr + recentBlockHash);
-          setSig(await generateSignature(web3Instance, addr, recentBlockHash));
+          console.log(`Address: ${addr}`);
+          console.log(`BlockHash: ${recentBlockHash}`);
+          // setSig(await generateSignature(web3Instance, addr, recentBlockHash));
+          const messageHash = generateMessageHash(
+            web3Instance,
+            addr,
+            recentBlockHash
+          );
+          console.log(`Message Hash: ${messageHash}`);
+          setSig(await imitateSignature(web3Instance, messageHash));
         }}
       >
         Get Signature
