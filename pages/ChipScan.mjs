@@ -16,9 +16,7 @@ const ChipScan = () => {
       "https://testnet.hashio.io/api"
     );
     const web3Instance = new Web3(web3Provider);
-    const account = web3Instance.eth.accounts.wallet.add(
-      "0x865aba28f210f192e60bca223b3467e6a59f842da17f1ebfadb4787f611542d0"
-    );
+    const account = web3Instance.eth.accounts.wallet.add(process.env);
 
     const latestBlockNumber = await web3Instance.eth.getBlockNumber();
     const block = await web3Instance.eth.getBlock(latestBlockNumber);
@@ -84,10 +82,7 @@ const ChipScan = () => {
   };
 
   const imitateSignature = (web3Instance, messageHash) => {
-    const signer = web3Instance.eth.accounts.sign(
-      messageHash,
-      "0x865aba28f210f192e60bca223b3467e6a59f842da17f1ebfadb4787f611542d0"
-    );
+    const signer = web3Instance.eth.accounts.sign(messageHash, process.env);
     console.log(`Signature: ${signer.signature}`);
     return signer.signature;
   };
